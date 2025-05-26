@@ -1,6 +1,6 @@
 # ⚛️ React + Laravel API Boilerplate
 
-A **full-stack integration boilerplate** using [React](https://reactjs.org/) (Frontend) and [Laravel 12](https://laravel.com/) (Backend API), built by [Sagar Rajput](https://github.com/astrogeeksagar) — passionate web developer & cosmic enthusiast 🌌
+A **full-stack integration boilerplate** using [React](https://reactjs.org/) (Frontend) and [Laravel 12](https://laravel.com/) (Backend API), built by [Sagar Rajput](https://github.com/astrogeeksagar) — passionate <b>Software Developer</b> & <b>Cosmic Enthusiast</b> 🌌
 
 ---
 
@@ -28,12 +28,13 @@ cd reactwithlaravel
 ## ⚙️ Setup Instructions
 
 ### 📁 Laravel Backend
-
 ```bash
 cd laravel-backend
 composer install
 cp .env.example .env
 php artisan key:generate
+php artisan migrate
+php artisan install:api
 php artisan serve
 ```
 
@@ -65,17 +66,31 @@ Route::post('/submit-form', [ContactFormController::class, 'submit']);
 
 **ContactFormController.php**
 ```php
-public function submit(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required|string',
-        'email' => 'required|email',
-        'message' => 'required|string',
-    ]);
+    public function submit(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name'  => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+        ]);
 
-    // You can store, send mail, or log the data
-    return response()->json(['message' => 'Form submitted successfully']);
-}
+        if ($validator->fails()) {
+            return response()->json([
+                'status' => false,
+                'errors' => $validator->errors(),
+            ], 422);
+        }
+
+        $user = new User();
+        $user->name = $request->name;
+        $user->email = $request->email;
+        $user->password = md5('12345678');
+        $user->save();
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Form submitted successfully sagar!',
+        ]);
+    }
 ```
 
 In your React frontend:
@@ -83,9 +98,9 @@ In your React frontend:
 **Example Axios POST**
 ```js
 axios.post('http://localhost:8000/api/submit-form', {
-  name: 'Sagar',
-  email: 'sagar@example.com',
-  message: 'Hello from React!',
+  name: 'Astrogeeksagar',
+  email: 'sagarrajpoot7860@gmail.com',
+  message: 'Hello from Astrogeeksagar!',
 })
 .then(response => console.log(response.data))
 .catch(error => console.error(error));
@@ -113,9 +128,9 @@ axios.post('http://localhost:8000/api/submit-form', {
 [![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/astrogeeksagar/)
 [![Instagram](https://img.shields.io/badge/Instagram-E4405F?style=for-the-badge&logo=instagram&logoColor=white)](https://www.instagram.com/astrogeek_sagar)
 
-🌐 Website: [astrogeeksagar.dev](https://astrogeeksagar.dev) *(if live)*  
+🌐 Website: [astrogeeksagar.com](https://astrogeeksagar.com)  
 📧 Email: sagarrajpoot7860@gmail.com  
-📱 WhatsApp: [+91 8574921683](https://api.whatsapp.com/send/?phone=918574921683&text=Hello%20Sagar)
+📱 WhatsApp: [+91 9116262471](https://api.whatsapp.com/send/?phone=9116262471&text=Hello%20Sagar)
 
 ---
 

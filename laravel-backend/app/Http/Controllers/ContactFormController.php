@@ -10,7 +10,6 @@ class ContactFormController extends Controller
 {
     public function submit(Request $request)
     {
-        // Validation
         $validator = Validator::make($request->all(), [
             'name'  => 'required|string|max:255',
             'email' => 'required|email|max:255',
